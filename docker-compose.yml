@@ -1,4 +1,41 @@
 services:
+  access_proxy:
+    image: traefik:v3.7
+    container_name: access_proxy
+    restart: unless-stopped
+
+    command:
+      # Traefik dashboard/API
+      - "--api.insecure=true"
+
+      # Docker provider
+      - "--providers.docker=true"
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "--providers.docker.exposedbydefault=false"
+
+      # HTTP
+      - "--entrypoints.web.address=:80"
+
+      # HTTPS
+      - "--entrypoints.web-secure.address=:443"
+
+      # Let's Encrypt
+      - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge=true"
+      - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myhttpchallenge.acme.email=${USER_MAIL}"
+      - "--certificatesresolvers.myhttpchallenge.acme.storage=/letsencrypt/acme.json"
+
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+    networks:
+      - hello_service
   auth:
     container_name: hello
     build:
