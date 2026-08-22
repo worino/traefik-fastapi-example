@@ -4,7 +4,7 @@ This project shows how to setup a FastAPI service behind a Traefik proxy running
 
 ### How to setup the project
 
-1. First, add the network to your docker environment: "docker network create hello_network".
+1. First, add the network to your docker environment: "docker network create hello_service".
 2. Add your email to "proxy/.env".
 3. Spin up the proxy: in the proxy folder run: "docker compose up --build -d".
 4. Spin up the hello container which contains the FastAPI: in root folder, run: "docker compose up --build -d"
