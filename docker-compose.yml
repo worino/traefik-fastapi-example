@@ -36,7 +36,7 @@ services:
 
     networks:
       - hello_service
-  auth:
+  hello:
     container_name: hello
     build:
       context: ./hello
